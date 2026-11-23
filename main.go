@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/cli/go-gh/v2/pkg/api"
 )
 
 const usage = `Team tools for the Shoald GitHub org.
@@ -61,27 +63,21 @@ func runNew(args []string) error {
 		return fmt.Errorf("new needs exactly one repo name, after any flags\n\n%s", usage)
 	}
 
-	fmt.Printf("new: would create %s from template-%s\n", names[0], *template)
-	return nil
-}
+	name := names[0]
 
-/*
-func main() {
-	fmt.Println("hi world, this is the gh-shoald extension!")
 	client, err := api.DefaultRESTClient()
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
-	response := struct {Login string}{}
-	err = client.Get("user", &response)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("running as %s\n", response.Login)
-}
-*/
 
-// For more examples of using go-gh, see:
-// https://github.com/cli/go-gh/blob/trunk/example_gh_test.go
+	if err := createFromTemplate(client, *template, name); err != nil {
+		return fmt.Errorf("creating repo: %w", err)
+	}
+	if err := applySettings(client, name); err != nil {
+		return fmt.Errorf("applying settings: %w", err)
+	}
+	fmt.Printf("Created %s/%s from template-%s\n", org, name, *template)
+	fmt.Printf("https://github.com/%s/%s\n", org, name)
+
+	return nil
+}
