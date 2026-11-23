@@ -25,6 +25,12 @@ gh shoald new --template=go repo-name
 
 `new` creates a private repo from a template, applies our repo settings, clones it, and fills in the repo name.
 Flags go before the name.
+
+Templates:
+
+- [template-base](https://github.com/shoald/template-base), the default, for any repo
+- [template-go](https://github.com/shoald/template-go) for Go services
+
 Run `gh shoald help` for all commands.
 
 ## Development
