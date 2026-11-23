@@ -76,6 +76,18 @@ func runNew(args []string) error {
 	if err := applySettings(client, name); err != nil {
 		return fmt.Errorf("applying settings: %w", err)
 	}
+	if err := waitForRepo(client, name); err != nil {
+		return err
+	}
+	if err := cloneRepo(name); err != nil {
+		return fmt.Errorf("cloning repo: %w", err)
+	}
+	if err := fillPlaceholders(name, name); err != nil {
+		return fmt.Errorf("filling placeholders in project files: %w", err)
+	}
+	if err := commitRepoName(name); err != nil {
+		return err
+	}
 	fmt.Printf("Created %s/%s from template-%s\n", org, name, *template)
 	fmt.Printf("https://github.com/%s/%s\n", org, name)
 
