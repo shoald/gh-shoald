@@ -41,11 +41,23 @@ After this, `gh shoald` runs the binary in this folder. Run `go build` again aft
 
 ## Release
 
-Tag a version and push it:
+Check the latest version:
 
 ```
-git tag v0.1.0
-git push origin v0.1.0
+git fetch --tags
+git describe --tags --abbrev=0
+```
+
+Pick the next one:
+
+- Bug fix -> bump the last number: `v0.1.0` -> `v0.1.1`
+- New command or flag -> bump the middle number: `v0.1.1` -> `v0.2.0`
+
+Then tag it and push the tag:
+
+```
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 The release workflow builds binaries for each platform and attaches them to a GitHub release.
